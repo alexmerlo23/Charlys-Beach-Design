@@ -8,12 +8,13 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: "",
+  apiKey: "AIzaSyCU5dnrVbtJ-jKldCwkZ_cvwYy-kejjGQ8",
+  authDomain: "bikini-site.firebaseapp.com",
+  projectId: "bikini-site",
+  storageBucket: "bikini-site.firebasestorage.app",
+  messagingSenderId: "1022355229235",
+  appId: "1:1022355229235:web:4c0ee0fce84f34f71df146",
+  measurementId: "G-R1K05YBBW6"
 };
 
 // Initialize Firebase
