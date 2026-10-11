@@ -9,5 +9,5 @@ export const config: Config = {
     configuredApiUrl ||
     (import.meta.env.DEV
       ? "http://localhost:8000"
-      : "https://charlys-beach-design.onrender.com"),
+      : "https://charlys-beach-design-backend.onrender.com"),
 };
