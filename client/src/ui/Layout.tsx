@@ -16,7 +16,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         containerClassName=""
         toastOptions={{
           style: {
-            backgroundColor: "black",
+            backgroundColor: "#5ec0eb",
             color: "white",
           },
         }}

@@ -1,6 +1,5 @@
 import {
   HiBookOpen,
-  HiBookmarkSquare,
   HiMiniQueueList,
   HiRss,
 } from "react-icons/hi2";
@@ -22,12 +21,6 @@ const links = [
     href: "/shop",
     description: "Maximum collections of shopping products.",
     icon: HiMiniQueueList,
-  },
-  {
-    name: "My Account",
-    href: "/profile",
-    description: "Find your information here.",
-    icon: HiBookmarkSquare,
   },
   {
     name: "Blog",

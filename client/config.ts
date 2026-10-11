@@ -1,24 +1,13 @@
 interface Config {
   baseUrl: string;
 }
-const checkConfig = (server: string): Config | {} => {
-  let config: Config | {} = {};
-  switch (server) {
-    case "production":
-      config = {
-        baseUrl: "https://supergearyt.vercel.app/",
-      };
-      break;
-    case "local":
-      config = {
-        baseUrl: "http://localhost:8000",
-      };
-      break;
-    default:
-      break;
-  }
-  return config;
-};
 
-export const selectServer = "production";
-export const config = checkConfig(selectServer) as Config;
+const configuredApiUrl = import.meta.env.VITE_API_URL?.trim().replace(/\/+$/, "");
+
+export const config: Config = {
+  baseUrl:
+    configuredApiUrl ||
+    (import.meta.env.DEV
+      ? "http://localhost:8000"
+      : "https://supergearyt.vercel.app"),
+};

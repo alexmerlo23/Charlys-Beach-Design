@@ -5,7 +5,6 @@ import AddToCartBtn from "./AddToCartBtn";
 import { IoClose } from "react-icons/io5";
 import { store } from "../lib/store";
 import toast from "react-hot-toast";
-import { FaCheck } from "react-icons/fa";
 
 const CartProduct = ({ product }: { product: ProductProps }) => {
   const { removeFromCart } = store();
@@ -30,16 +29,14 @@ const CartProduct = ({ product }: { product: ProductProps }) => {
             <h3 className="text-base font-semibold w-full">
               {product?.name.substring(0, 80)}
             </h3>
-            <p className="text-xs">
-              Brand: <span className=" font-medium">{product?.brand}</span>
-            </p>
+            
             <p className="text-xs">
               Category: <span className="font-medium">{product?.category}</span>
             </p>
             <div className="flex items-center gap-6 mt-2">
               <p className="text-base font-semibold">
                 <FormattedPrice
-                  amount={product?.discountedPrice * product?.quantity}
+                  amount={product?.regularPrice * product?.quantity}
                 />
               </p>
               <AddToCartBtn product={product} showPrice={false} />
@@ -55,23 +52,6 @@ const CartProduct = ({ product }: { product: ProductProps }) => {
               </button>
             </div>
           </div>
-        </div>
-        <div>
-          {product?.isStock && (
-            <p className="mt-4 flex space-x-2 text-sm text-gray-700">
-              <FaCheck className="text-lg text-green-500" />{" "}
-              <span>In Stock</span>
-            </p>
-          )}
-          <p>
-            You are saving{" "}
-            <span className="text-sm font-semibold text-green-500">
-              <FormattedPrice
-                amount={product?.regularPrice - product?.discountedPrice}
-              />
-            </span>{" "}
-            upon purchase
-          </p>
         </div>
       </div>
     </div>

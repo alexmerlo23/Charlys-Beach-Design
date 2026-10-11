@@ -7,14 +7,11 @@ interface Props {
   className?: string;
 }
 
-const PriceTag = ({ regularPrice, discountedPrice, className }: Props) => {
+const PriceTag = ({ regularPrice, className }: Props) => {
   return (
     <div className={twMerge("flex items-center gap-2", className)}>
-      <p className="line-through text-gray-500 font-medium">
+      <p className="font-bold text-skyText text-lg">
         <FormattedPrice amount={regularPrice} />
-      </p>
-      <p className="font-bold text-skyText">
-        <FormattedPrice amount={discountedPrice} />
       </p>
     </div>
   );

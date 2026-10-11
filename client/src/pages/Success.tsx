@@ -67,16 +67,8 @@ const Success = () => {
             ? "Your order payment is processing"
             : "Your Payment Accepted by supergear.com"}
         </h2>
-        <p>
-          {loading ? "Once done" : "Now"} you can view your Orders or continue
-          Shopping with us
-        </p>
+        <p>{loading ? "Your payment is processing." : "Thanks for shopping with us."}</p>
         <div className="flex items-center gap-x-5">
-          <Link to={"/orders"}>
-            <button className="bg-black text-slate-100 w-52 h-12 rounded-full text-base font-semibold hover:bg-primeColor duration-300">
-              View Orders
-            </button>
-          </Link>
           <Link to={"/"}>
             <button className="bg-black text-slate-100 w-52 h-12 rounded-full text-base font-semibold hover:bg-primeColor duration-300">
               Continue Shopping

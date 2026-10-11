@@ -1,12 +1,15 @@
 import express from "express";
 const app = express();
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config();
+dotenv.config({ path: ".env.local" });
 import cors from "cors";
 import { fileURLToPath } from "url";
 import path from "path";
 import { readdirSync } from "fs";
 
 const port = process.env.PORT || 8000;
+app.set("trust proxy", 1);
 app.use(cors());
 app.use(express.json());
 
