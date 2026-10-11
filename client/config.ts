@@ -9,5 +9,5 @@ export const config: Config = {
     configuredApiUrl ||
     (import.meta.env.DEV
       ? "http://localhost:8000"
-      : "https://supergearyt.vercel.app"),
+      : "https://charlys-beach-design.onrender.com"),
 };
