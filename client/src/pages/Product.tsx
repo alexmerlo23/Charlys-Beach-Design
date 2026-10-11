@@ -7,7 +7,6 @@ import Loading from "../ui/Loading";
 import Container from "../ui/Container";
 import _ from "lodash";
 import AddToCartBtn from "../ui/AddToCartBtn";
-import { productPayment } from "../assets";
 import ProductCard from "../ui/ProductCard";
 import CategoryFilters from "../ui/CategoryFilters";
 
@@ -95,16 +94,6 @@ const Product = () => {
                   title="Add to Cart"
                   className="bg-black/80 py-3 text-base text-gray-200 hover:scale-100 hover:text-white duration-200"
                 />
-                <div className="bg-[#f7f7f7] p-5 rounded-md flex flex-col items-center justify-center gap-2">
-                  <img
-                    src={productPayment}
-                    alt="payment"
-                    className="w-auto object-cover"
-                  />
-                  <p className="font-semibold">
-                    Guaranteed safe & secure checkout
-                  </p>
-                </div>
               </div>
             </div>
           ) : (
