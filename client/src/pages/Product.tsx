@@ -126,9 +126,9 @@ const Product = () => {
             <div className="flex items-start gap-10">
               <CategoryFilters id={id} />
               <div>
-                <p className="text-4xl font-semibold mb-5 text-center">
-                  Products Collection
-                </p>
+                <h1 className="mb-6 text-4xl font-extrabold leading-tight text-gray-950 sm:text-5xl">
+                  My Products
+                </h1>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                   {allProducts?.map((item: ProductProps) => (
                     <ProductCard item={item} key={item?._id} />

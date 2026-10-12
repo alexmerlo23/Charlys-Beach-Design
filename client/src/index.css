@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --home-hero-title-size: 4.5rem;
+  --home-hero-copy-size: 1.5rem;
+}
+
+@media (max-width: 639px) {
+  :root {
+    --home-hero-title-size: 2.75rem;
+    --home-hero-copy-size: 1.25rem;
+  }
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
