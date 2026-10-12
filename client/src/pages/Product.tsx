@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { config } from "../../config";
-import { ProductProps } from "../../type";
+import { BikiniSize, bikiniSizes, ProductProps } from "../../type";
 import { getData } from "../lib";
 import Loading from "../ui/Loading";
 import Container from "../ui/Container";
@@ -16,6 +16,7 @@ const Product = () => {
   const [loading, setLoading] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
   const [, setColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState<BikiniSize | "">("");
   const { id } = useParams();
 
   const endpoint = id
@@ -47,6 +48,7 @@ const Product = () => {
     if (productData) {
       setImgUrl(productData?.images[0]);
       setColor(productData?.colors[0]);
+      setSelectedSize("");
     }
   }, [productData]);
 
@@ -89,8 +91,32 @@ const Product = () => {
                   Category:{" "}
                   <span className="font-medium">{productData?.category}</span>
                 </p>
+                <label
+                  htmlFor="product-size"
+                  className="text-sm font-semibold text-gray-800"
+                >
+                  Size
+                </label>
+                <select
+                  id="product-size"
+                  required
+                  value={selectedSize}
+                  onChange={(event) =>
+                    setSelectedSize(event.target.value as BikiniSize | "")
+                  }
+                  className="w-full max-w-sm rounded-md border border-gray-300 bg-white px-3 py-3 text-gray-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                >
+                  <option value="">Select a size</option>
+                  {bikiniSizes.map(({ value, label }) => (
+                    <option value={value} key={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
                 <AddToCartBtn
                   product={productData}
+                  size={selectedSize || undefined}
+                  sizeRequired
                   title="Add to Cart"
                   className="bg-black/80 py-3 text-base text-gray-200 hover:scale-100 hover:text-white duration-200"
                 />

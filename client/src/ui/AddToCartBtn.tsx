@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
-import { ProductProps } from "../../type";
-import { store } from "../lib/store";
+import { BikiniSize, ProductProps } from "../../type";
+import { CartProduct, store } from "../lib/store";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
@@ -10,29 +10,37 @@ const AddToCartBtn = ({
   className,
   title,
   product,
+  size,
+  sizeRequired = false,
   showPrice = true,
 }: {
   className?: string;
   title?: string;
   product?: ProductProps;
+  size?: BikiniSize;
+  sizeRequired?: boolean;
   showPrice?: boolean;
 }) => {
-  const [existingProduct, setExistingProduct] = useState<ProductProps | null>(
+  const [existingProduct, setExistingProduct] = useState<CartProduct | null>(
     null
   );
   const { addToCart, cartProduct, decreaseQuantity } = store();
 
   useEffect(() => {
     const availableItem = cartProduct.find(
-      (item) => item?._id === product?._id
+      (item) => item?._id === product?._id && item.size === size
     );
 
     setExistingProduct(availableItem || null);
-  }, [product, cartProduct]);
+  }, [product, size, cartProduct]);
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart(product);
+      if (sizeRequired && !size) {
+        toast.error("Select a size before adding this item.");
+        return;
+      }
+      addToCart(product, size);
       toast.success(`${product?.name.substring(0, 10)} added successfully!`);
     } else {
       toast.error("Product is undefined!");
@@ -42,19 +50,18 @@ const AddToCartBtn = ({
   const handleDeleteProduct = () => {
     if (existingProduct) {
       if (existingProduct?.quantity > 1) {
-        decreaseQuantity(existingProduct?._id);
+        decreaseQuantity(existingProduct._id, existingProduct.size);
         toast.success(
           `${product?.name.substring(0, 10)} decreased successfully`
         );
       } else {
         toast.error("You can not decrease less than 1");
       }
-    } else {
     }
   };
 
   const newClassName = twMerge(
-    "bg-[#5ec0eb] uppercase text-sm py-3 text-black text-center rounded-full font-bold hover:bg-[#6bd5ed] hover:text-white hover:scale-105 duration-200 cursor-pointer",
+    "bg-[#5ec0eb] uppercase text-sm py-3 text-black text-center rounded-full font-bold hover:bg-[#6bd5ed] hover:text-white hover:scale-105 duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50",
     className
   );
 
@@ -107,7 +114,11 @@ const AddToCartBtn = ({
           </button>
         </div>
       ) : (
-        <button onClick={handleAddToCart} className={newClassName}>
+        <button
+          onClick={handleAddToCart}
+          disabled={sizeRequired && !size}
+          className={newClassName}
+        >
           {title ? title : "Add to cart"}
         </button>
       )}

@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
-import { ProductProps } from "../../type";
+import { BikiniSize, bikiniSizes } from "../../type";
 import FormattedPrice from "./FormattedPrice";
 import AddToCartBtn from "./AddToCartBtn";
 import { IoClose } from "react-icons/io5";
-import { store } from "../lib/store";
+import { CartProduct as CartLine, store } from "../lib/store";
 import toast from "react-hot-toast";
 
-const CartProduct = ({ product }: { product: ProductProps }) => {
-  const { removeFromCart } = store();
+const CartProduct = ({ product }: { product: CartLine }) => {
+  const { removeFromCart, setCartItemSize } = store();
   const handleRemoveProduct = () => {
     if (product) {
-      removeFromCart(product?._id);
+      removeFromCart(product._id, product.size);
       toast.success(`${product?.name.substring(0, 20)} deleted successfully!`);
     }
   };
@@ -33,13 +33,40 @@ const CartProduct = ({ product }: { product: ProductProps }) => {
             <p className="text-xs">
               Category: <span className="font-medium">{product?.category}</span>
             </p>
+            <label
+              htmlFor={`cart-size-${product._id}-${product.size ?? "unset"}`}
+              className="mt-2 text-sm font-medium text-gray-700"
+            >
+              Size
+            </label>
+            <select
+              id={`cart-size-${product._id}-${product.size ?? "unset"}`}
+              required
+              value={product.size ?? ""}
+              onChange={(event) => {
+                const size = event.target.value as BikiniSize;
+                if (size) setCartItemSize(product._id, product.size, size);
+              }}
+              className="w-40 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+            >
+              <option value="">Select a size</option>
+              {bikiniSizes.map(({ value, label }) => (
+                <option value={value} key={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
             <div className="flex items-center gap-6 mt-2">
               <p className="text-base font-semibold">
                 <FormattedPrice
                   amount={product?.regularPrice * product?.quantity}
                 />
               </p>
-              <AddToCartBtn product={product} showPrice={false} />
+              <AddToCartBtn
+                product={product}
+                size={product.size}
+                showPrice={false}
+              />
             </div>
           </div>
           <div className="mt-4 sm:mt-0 sm:pr-9">

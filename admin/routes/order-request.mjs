@@ -4,6 +4,15 @@ import nodemailer from "nodemailer";
 
 const router = Router();
 const notificationEmail = "alexmerlo23@gmail.com";
+const sizeLabels = {
+  XXS: "XX-Small",
+  XS: "X-Small",
+  S: "Small",
+  M: "Medium",
+  L: "Large",
+  XL: "X-Large",
+  XXL: "XX-Large",
+};
 const orderRequestLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 5,
@@ -47,14 +56,18 @@ router.post("/order-request", orderRequestLimiter, async (req, res) => {
   for (const item of submittedItems) {
     const name = typeof item?.name === "string" ? item.name.trim() : "";
     const quantity = Number(item?.quantity);
+    const size = typeof item?.size === "string" ? item.size : "";
     if (
       !name ||
       name.length > 160 ||
       !Number.isInteger(quantity) ||
       quantity < 1 ||
-      quantity > 1000
+      quantity > 1000 ||
+      !Object.hasOwn(sizeLabels, size)
     ) {
-      return res.status(400).json({ message: "The cart contains an invalid item." });
+      return res.status(400).json({
+        message: "Every cart item must have a valid size selected.",
+      });
     }
     let image = "";
     if (typeof item?.image === "string") {
@@ -67,7 +80,7 @@ router.post("/order-request", orderRequestLimiter, async (req, res) => {
         image = "";
       }
     }
-    items.push({ name, quantity, image });
+    items.push({ name, quantity, size, image });
   }
 
   const { SMTP_HOST, SMTP_USER, SMTP_PASS } = process.env;
@@ -89,13 +102,16 @@ router.post("/order-request", orderRequestLimiter, async (req, res) => {
     secure: process.env.SMTP_SECURE === "true",
     auth: { user: SMTP_USER, pass: SMTP_PASS },
   });
-  const itemLines = items.map(({ name, quantity }) => `- ${name} x ${quantity}`);
+  const itemLines = items.map(
+    ({ name, quantity, size }) =>
+      `- ${name} x ${quantity} (Size: ${sizeLabels[size]})`
+  );
   const itemRows = items
-    .map(({ name, quantity, image }) => {
+    .map(({ name, quantity, size, image }) => {
       const imageMarkup = image
         ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(name)}" width="88" height="104" style="display:block;width:88px;height:104px;object-fit:cover;border:0;border-radius:4px;background:#eef6f8;" />`
         : `<div style="width:88px;height:104px;background:#eef6f8;color:#64748b;text-align:center;line-height:104px;font-size:11px;">Image unavailable</div>`;
-      return `<tr><td style="padding:14px 0;border-bottom:1px solid #e5e7eb;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="104" valign="top" style="padding-right:16px;">${imageMarkup}</td><td valign="middle" style="font-family:Arial,sans-serif;"><div style="font-size:15px;line-height:22px;font-weight:700;color:#17212b;">${escapeHtml(name)}</div><div style="padding-top:6px;font-size:13px;line-height:19px;color:#52616b;">Quantity: ${quantity}</div></td></tr></table></td></tr>`;
+      return `<tr><td style="padding:14px 0;border-bottom:1px solid #e5e7eb;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="104" valign="top" style="padding-right:16px;">${imageMarkup}</td><td valign="middle" style="font-family:Arial,sans-serif;"><div style="font-size:15px;line-height:22px;font-weight:700;color:#17212b;">${escapeHtml(name)}</div><div style="padding-top:6px;font-size:13px;line-height:19px;color:#52616b;">Size: ${sizeLabels[size]}<br />Quantity: ${quantity}</div></td></tr></table></td></tr>`;
     })
     .join("");
   const safeEmail = escapeHtml(email);

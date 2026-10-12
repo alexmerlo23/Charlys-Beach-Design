@@ -18,7 +18,10 @@ const Cart = () => {
             <section className="lg:col-span-7">
               <div className=" divide-y divide-gray-200 border-b border-t border-gray-200">
                 {cartProduct.map((product) => (
-                  <CartProduct product={product} key={product?._id} />
+                  <CartProduct
+                    product={product}
+                    key={`${product._id}-${product.size ?? "unset"}`}
+                  />
                 ))}
               </div>
             </section>

@@ -1,3 +1,15 @@
+export const bikiniSizes = [
+  { value: "XXS", label: "XX-Small" },
+  { value: "XS", label: "X-Small" },
+  { value: "S", label: "Small" },
+  { value: "M", label: "Medium" },
+  { value: "L", label: "Large" },
+  { value: "XL", label: "X-Large" },
+  { value: "XXL", label: "XX-Large" },
+] as const;
+
+export type BikiniSize = (typeof bikiniSizes)[number]["value"];
+
 export interface HighlightsType {
   _id: number;
   _base: string;

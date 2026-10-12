@@ -1,17 +1,21 @@
 import { FormEvent, useState } from "react";
-import { ProductProps } from "../../type";
-import { store } from "../lib/store";
+import { CartProduct as CartLine, store } from "../lib/store";
 import { config } from "../../config";
 import toast from "react-hot-toast";
 
-const CheckoutBtn = ({ products }: { products: ProductProps[] }) => {
+const CheckoutBtn = ({ products }: { products: CartLine[] }) => {
   const resetCart = store((state) => state.resetCart);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const hasMissingSize = products.some((product) => !product.size);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (hasMissingSize) {
+      toast.error("Select a size for every item before submitting your order.");
+      return;
+    }
     setIsSending(true);
     try {
       const response = await fetch(`${config.baseUrl}/order-request`, {
@@ -24,6 +28,7 @@ const CheckoutBtn = ({ products }: { products: ProductProps[] }) => {
             id: product._id,
             name: product.name,
             quantity: product.quantity,
+            size: product.size,
             image: product.images?.[0],
           })),
         }),
@@ -80,12 +85,17 @@ const CheckoutBtn = ({ products }: { products: ProductProps[] }) => {
       <p className="mt-2 text-xs text-gray-500">
         We may use this number to follow up about your cart.
       </p>
+      {hasMissingSize && (
+        <p className="mt-3 text-sm font-medium text-red-600" role="alert">
+          Select a size for every item before submitting your order.
+        </p>
+      )}
       <button
         type="submit"
-        disabled={isSending || products.length === 0}
+        disabled={isSending || products.length === 0 || hasMissingSize}
         className="mt-4 w-full rounded-md border border-transparent bg-gray-800 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-black focus:outline-none focus:ring-2 focus:ring-skyText focus:ring-offset-2 focus:ring-offset-gray-50 duration-200 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isSending ? "Sending..." : "Email me this cart"}
+        {isSending ? "Submitting..." : "Submit Order and Send Email Confirmation"}
       </button>
     </form>
   );
