@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 
 const CartProduct = ({ product }: { product: CartLine }) => {
   const { removeFromCart, setCartItemSize } = store();
+  const requiresSize = product.category?.trim().toLowerCase() === "bikinis";
   const handleRemoveProduct = () => {
     if (product) {
       removeFromCart(product._id, product.size);
@@ -33,29 +34,33 @@ const CartProduct = ({ product }: { product: CartLine }) => {
             <p className="text-xs">
               Category: <span className="font-medium">{product?.category}</span>
             </p>
-            <label
-              htmlFor={`cart-size-${product._id}-${product.size ?? "unset"}`}
-              className="mt-2 text-sm font-medium text-gray-700"
-            >
-              Size
-            </label>
-            <select
-              id={`cart-size-${product._id}-${product.size ?? "unset"}`}
-              required
-              value={product.size ?? ""}
-              onChange={(event) => {
-                const size = event.target.value as BikiniSize;
-                if (size) setCartItemSize(product._id, product.size, size);
-              }}
-              className="w-40 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
-            >
-              <option value="">Select a size</option>
-              {bikiniSizes.map(({ value, label }) => (
-                <option value={value} key={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+            {requiresSize && (
+              <>
+                <label
+                  htmlFor={`cart-size-${product._id}-${product.size ?? "unset"}`}
+                  className="mt-2 text-sm font-medium text-gray-700"
+                >
+                  Size
+                </label>
+                <select
+                  id={`cart-size-${product._id}-${product.size ?? "unset"}`}
+                  required
+                  value={product.size ?? ""}
+                  onChange={(event) => {
+                    const size = event.target.value as BikiniSize;
+                    if (size) setCartItemSize(product._id, product.size, size);
+                  }}
+                  className="w-40 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                >
+                  <option value="">Select a size</option>
+                  {bikiniSizes.map(({ value, label }) => (
+                    <option value={value} key={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
             <div className="flex items-center gap-6 mt-2">
               <p className="text-base font-semibold">
                 <FormattedPrice

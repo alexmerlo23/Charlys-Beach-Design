@@ -8,7 +8,10 @@ const CheckoutBtn = ({ products }: { products: CartLine[] }) => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const hasMissingSize = products.some((product) => !product.size);
+  const hasMissingSize = products.some(
+    (product) =>
+      product.category?.trim().toLowerCase() === "bikinis" && !product.size
+  );
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,6 +30,7 @@ const CheckoutBtn = ({ products }: { products: CartLine[] }) => {
           items: products.map((product) => ({
             id: product._id,
             name: product.name,
+            category: product.category,
             quantity: product.quantity,
             size: product.size,
             image: product.images?.[0],
